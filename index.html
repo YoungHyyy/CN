@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Quiz Chủ nghĩa xã hội</title>
+
+    <style>
+      body {
+        font-family: Arial;
+        background: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .quiz-container {
+        background: white;
+        width: 750px;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .progress {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .question {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        padding: 8px;
+        margin: 5px 0;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .correct {
+        background: #c8f7c5;
+      }
+      .wrong {
+        background: #ffc9c9;
+      }
+
+      button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-right: 10px;
+      }
+
+      #checkBtn {
+        background: #007bff;
+        color: white;
+      }
+      #nextBtn {
+        background: #28a745;
+        color: white;
+      }
+      #prevBtn {
+        background: #6c757d;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="quiz-container">
+      <div class="progress" id="progress"></div>
+      <div id="questionBox" class="question"></div>
+      <div id="optionsBox"></div>
+
+      <button id="prevBtn" onclick="prevQuestion()">Câu trước</button>
+      <button id="checkBtn" onclick="checkAnswer()">Kiểm tra</button>
+      <button id="nextBtn" onclick="nextQuestion()">Câu tiếp theo</button>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          q: "Câu 18: Về phương diện chính trị - xã hội, giai cấp công nhân có đặc điểm gì?",
+          options: [
+            "A. Là sản phẩm xã hội của quá trình phát triển tư bản chủ nghĩa",
+            "B. Là sản phẩm của quá trình phát triển kinh tế hàng hóa",
+            "C. Là con đẻ của chủ nghĩa tư bản",
+            "D. Là sản phẩm của quá trình phát triển xã hội phong kiến",
+          ],
+          answer: [0],
+        },
+
+        {
+          q: "Câu 19: Chủ nghĩa xã hội được hiểu theo mấy nghĩa?",
+          options: ["A. 4", "B. 3", "C. 2", "D. 1"],
+          answer: [1],
+        },
+
+        {
+          q: "Câu 20: Chủ nghĩa xã hội có mấy đặc trưng cơ bản?",
+          options: ["A. 8", "B. 7", "C. 6", "D. 5"],
+          answer: [1],
+        },
+
+        {
+          q: "Câu 21: Có mấy loại quá độ lên CNCS?",
+          options: ["A. 1", "B. 2", "C. 3", "D. 4"],
+          answer: [1],
+        },
+
+        {
+          q: "Câu 22: Xã hội XHCN Việt Nam có mấy đặc trưng?",
+          options: ["A. 6", "B. 7", "C. 8", "D. 9"],
+          answer: [2],
+        },
+
+        {
+          q: "Câu 23: Điều kiện kinh tế cho sự ra đời CNXH?",
+          options: [
+            "A. Điện khí hóa",
+            "B. Tự động hóa",
+            "C. Tin học hóa",
+            "D. Phát triển lực lượng sản xuất",
+          ],
+          answer: [3],
+        },
+
+        {
+          q: "Câu 24: Theo Lênin cần tổ chức lao động cao hơn và?",
+          options: [
+            "A. Nâng cao năng suất lao động",
+            "B. Phát triển lực lượng sản xuất",
+            "C. Đẩy mạnh sản xuất",
+            "D. Công nghiệp hóa",
+          ],
+          answer: [0],
+        },
+
+        {
+          q: "Câu 25: Cơ sở kinh tế CNXH khác TBCN ở?",
+          options: [
+            "A. Chế độ sở hữu TLSX chủ yếu",
+            "B. Tư hữu TLSX",
+            "C. Công hữu TLSX",
+            "D. Tổ chức quản lý",
+          ],
+          answer: [2],
+        },
+
+        {
+          q: "Câu 26: Vì sao Việt Nam bỏ qua TBCN?",
+          options: [
+            "A. Nông nghiệp lạc hậu",
+            "B. Tư sản yếu",
+            "C. Thuộc địa nửa phong kiến",
+            "D. Phù hợp nguyện vọng dân tộc và xu thế thời đại",
+          ],
+          answer: [3],
+        },
+
+        {
+          q: "Câu 88: Thực chất thời kỳ quá độ?",
+          options: [
+            "A. Cải biến cách mạng",
+            "B. Kinh tế nhiều thành phần",
+            "C. Nhiều hình thức phân phối",
+            "D. Nhiều hình thức sở hữu",
+          ],
+          answer: [0],
+        },
+
+        {
+          q: "Câu 89: Quá độ ở Việt Nam là?",
+          options: [
+            "A. Trực tiếp",
+            "B. Gián tiếp bỏ qua TBCN",
+            "C. Bỏ qua phong kiến",
+            "D. Có trung gian",
+          ],
+          answer: [1],
+        },
+
+        {
+          q: "Câu 90: Thời kỳ quá độ cả nước bắt đầu?",
+          options: ["A. 1945", "B. 1954", "C. 1975", "D. 1930"],
+          answer: [2],
+        },
+
+        {
+          q: "Câu 91: Cương lĩnh quá độ nêu ở Đại hội?",
+          options: ["A. IV", "B. VI", "C. VII", "D. VIII"],
+          answer: [2],
+        },
+
+        {
+          q: "Câu 92: Tiếp thu gì từ CNTB?",
+          options: [
+            "A. Thành tựu KH-CN",
+            "B. Mô hình quản lý",
+            "C. Giá trị kinh tế-chính trị-văn hóa",
+            "D. Cách thức tổ chức quản lý",
+          ],
+          answer: [0],
+        },
+
+        {
+          q: "Câu 93: Luận điểm chính xác nhất về XHCN?",
+          options: [
+            "A. Xóa bỏ tư hữu phong kiến",
+            "B. Xóa bỏ sản xuất hàng hóa",
+            "C. Xóa bỏ tự cấp tự túc",
+            "D. Xóa bỏ tư hữu tư nhân",
+          ],
+          answer: [3],
+        },
+
+        {
+          q: "Câu 94: Đặc điểm tư tưởng - văn hóa?",
+          options: [
+            "A. Vô sản & tư sản",
+            "B. Thuần khiết",
+            "C. Văn hóa đan xen",
+            "D. Phong kiến & vô sản",
+          ],
+          answer: [0],
+        },
+
+        {
+          q: "Câu 95: Đặc điểm kinh tế?",
+          options: [
+            "A. Nhiều hệ tư tưởng",
+            "B. Kinh tế nhiều thành phần",
+            "C. Đấu tranh giai cấp",
+            "D. Tàn dư chế độ cũ",
+          ],
+          answer: [1],
+        },
+
+        {
+          q: "Câu 96: Đặc điểm xã hội?",
+          options: [
+            "A. Nhiều sở hữu",
+            "B. Nhiều thành phần kinh tế",
+            "C. Giai cấp & đấu tranh giai cấp",
+            "D. Tàn dư tư tưởng",
+          ],
+          answer: [2],
+        },
+
+        {
+          q: "Câu 97: CNXH dựa trên sở hữu?",
+          options: ["A. Tư hữu", "B. Tập thể", "C. Hỗn hợp", "D. Công hữu"],
+          answer: [3],
+        },
+
+        {
+          q: "Câu 98: Thích ứng với cải biến cách mạng là?",
+          options: [
+            "A. Kinh tế",
+            "B. Thị trường",
+            "C. Quá độ chính trị",
+            "D. Văn hóa",
+          ],
+          answer: [2],
+        },
+
+        {
+          q: "Câu 99: Bỏ qua yếu tố nào?",
+          options: [
+            "A. Nhà nước TBCN",
+            "B. Cơ sở kinh tế TBCN",
+            "C. Quan hệ sản xuất TBCN",
+            "D. Áp bức bóc lột",
+          ],
+          answer: [2],
+        },
+      ];
+
+      let currentQuestion = 0;
+      let userAnswers = new Array(questions.length).fill([]);
+      let checkedQuestions = new Array(questions.length).fill(false);
+
+      function loadQuestion() {
+        let q = questions[currentQuestion];
+        document.getElementById("progress").innerText =
+          `Câu ${currentQuestion + 1} / ${questions.length}`;
+
+        document.getElementById("questionBox").innerText = q.q;
+
+        let html = "";
+
+        q.options.forEach((option, index) => {
+          let checked = "";
+          if (userAnswers[currentQuestion].includes(index)) {
+            checked = "checked";
+          }
+
+          html += `
+<label>
+<input type="checkbox" value="${index}" ${checked}>
+${option}
+</label>
+`;
+        });
+
+        document.getElementById("optionsBox").innerHTML = html;
+
+        document.getElementById("prevBtn").style.display =
+          currentQuestion === 0 ? "none" : "inline-block";
+
+        restoreColors();
+      }
+
+      function checkAnswer() {
+        let selected = [];
+        document.querySelectorAll("#optionsBox input").forEach((cb) => {
+          if (cb.checked) selected.push(parseInt(cb.value));
+        });
+
+        if (selected.length === 0) {
+          alert("Bạn chưa chọn đáp án!");
+          return;
+        }
+
+        userAnswers[currentQuestion] = selected;
+        checkedQuestions[currentQuestion] = true;
+        showCorrectWrong();
+      }
+
+      function showCorrectWrong() {
+        let correct = questions[currentQuestion].answer;
+        let labels = document.querySelectorAll("#optionsBox label");
+
+        labels.forEach((label, index) => {
+          label.classList.remove("correct", "wrong");
+
+          if (correct.includes(index)) label.classList.add("correct");
+
+          if (
+            userAnswers[currentQuestion].includes(index) &&
+            !correct.includes(index)
+          )
+            label.classList.add("wrong");
+        });
+      }
+
+      function restoreColors() {
+        if (checkedQuestions[currentQuestion]) showCorrectWrong();
+      }
+
+      function nextQuestion() {
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }
+
+      function prevQuestion() {
+        currentQuestion--;
+        loadQuestion();
+      }
+
+      function showResult() {
+        let score = 0;
+
+        questions.forEach((q, index) => {
+          let user = userAnswers[index] || [];
+          let correct = q.answer;
+
+          if (
+            user.length === correct.length &&
+            user.every((val) => correct.includes(val))
+          ) {
+            score++;
+          }
+        });
+
+        document.querySelector(".quiz-container").innerHTML =
+          `<h2>Hoàn thành!</h2>
+<p>Bạn đúng ${score} / ${questions.length} câu</p>`;
+      }
+
+      loadQuestion();
+    </script>
+  </body>
+</html>
