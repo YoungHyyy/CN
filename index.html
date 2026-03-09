@@ -282,6 +282,16 @@
           answer: [2],
         },
       ];
+      // Hàm đảo ngẫu nhiên mảng
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+
+      // đảo thứ tự câu hỏi
+      shuffle(questions);
 
       let currentQuestion = 0;
       let userAnswers = new Array(questions.length).fill([]);
